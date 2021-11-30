@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors
+Copyright 2020 The Tekton Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,20 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1alpha1
-
-import (
-	"context"
-
-	"knative.dev/pkg/apis"
-)
-
-// Validate implements apis.Validatable
-func (as *ApproveRequest) Validate(ctx context.Context) *apis.FieldError {
-	return as.Spec.Validate(ctx).ViaField("spec")
-}
-
-// Validate implements apis.Validatable
-func (ass *ApproveRequestSpec) Validate(ctx context.Context) *apis.FieldError {
-	return nil
-}
+// Package events defines the interface and different implementations for events
+//
+// Tekton uses events to notify about changes in Condition of resources, like a
+// TaskRun is starting, a PipelineRun failed to run or could not be validated.
+package events

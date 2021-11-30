@@ -19,6 +19,9 @@ package manualapprove
 import (
 	"context"
 
+	"go.uber.org/zap"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/tools/cache"
 	"knative.dev/pkg/configmap"
 	"knative.dev/pkg/controller"
 	"knative.dev/pkg/logging"
@@ -26,7 +29,18 @@ import (
 	pipelineclient "github.com/tektoncd/pipeline/pkg/client/injection/client"
 	runinformer "github.com/tektoncd/pipeline/pkg/client/injection/informers/pipeline/v1alpha1/run"
 	runreconciler "github.com/tektoncd/pipeline/pkg/client/injection/reconciler/pipeline/v1alpha1/run"
+	pipelinecontroller "github.com/tektoncd/pipeline/pkg/controller"
+	"github.com/vincent-pli/manual-approve-tekton/pkg/apis/approverequests/v1alpha1"
+	approverequestclient "github.com/vincent-pli/manual-approve-tekton/pkg/client/injection/client"
+	approverequestinformer "github.com/vincent-pli/manual-approve-tekton/pkg/client/injection/informers/approverequests/v1alpha1/approverequest"
 )
+
+// Reconciler implements addressableservicereconciler.Interface for
+// AddressableService resources.
+type Enqueue struct {
+	impl   controller.Impl
+	logger *zap.SugaredLogger
+}
 
 // NewController creates a Reconciler and returns the result of NewImpl.
 func NewController(
@@ -36,17 +50,44 @@ func NewController(
 	logger := logging.FromContext(ctx)
 	pipelineclientset := pipelineclient.Get(ctx)
 	runInformer := runinformer.Get(ctx)
+	approveRequestinformer := approverequestinformer.Get(ctx)
+	approverequestclientset := approverequestclient.Get(ctx)
 
 	logger.Info("Creating reconciler.")
 	r := &Reconciler{
-		pipelineClientSet: pipelineclientset,
-		runLister:         runInformer.Lister(),
+		pipelineClientSet:       pipelineclientset,
+		approverequestClientSet: approverequestclientset,
+		runLister:               runInformer.Lister(),
 	}
 	impl := runreconciler.NewImpl(ctx, r)
 	r.Tracker = impl.Tracker
 
 	logger.Info("Setting up event handlers.")
-	runInformer.Informer().AddEventHandler(controller.HandleAll(impl.Enqueue))
+	enqueue := &Enqueue{
+		impl:   *impl,
+		logger: logger,
+	}
+
+	approveRequestinformer.Informer().AddEventHandler(controller.HandleAll(enqueue.EnqueueReferenceRun))
+
+	runInformer.Informer().AddEventHandler(cache.FilteringResourceEventHandler{
+		FilterFunc: pipelinecontroller.FilterRunRef(v1alpha1.SchemeGroupVersion.String(), "ApproveRequest"),
+		Handler:    controller.HandleAll(impl.Enqueue),
+	})
 
 	return impl
+}
+
+func (e *Enqueue) EnqueueReferenceRun(obj interface{}) {
+	ar, ok := obj.(v1alpha1.ApproveRequest)
+	if !ok {
+		e.logger.Error("Not a ApproveRequest")
+		return
+	}
+
+	// If we can determine the controller ref of this object, then
+	// add that object to our workqueue.
+	if refrence := ar.Spec.RequestName; refrence != "" {
+		e.impl.EnqueueKey(types.NamespacedName{Namespace: ar.GetNamespace(), Name: refrence})
+	}
 }

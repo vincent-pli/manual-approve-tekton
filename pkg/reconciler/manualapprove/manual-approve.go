@@ -18,6 +18,7 @@ package manualapprove
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/hashicorp/go-multierror"
@@ -25,7 +26,10 @@ import (
 	clientset "github.com/tektoncd/pipeline/pkg/client/clientset/versioned"
 	runreconciler "github.com/tektoncd/pipeline/pkg/client/injection/reconciler/pipeline/v1alpha1/run"
 	listersalpha "github.com/tektoncd/pipeline/pkg/client/listers/pipeline/v1alpha1"
-	"go.uber.org/zap"
+	"github.com/tektoncd/pipeline/pkg/reconciler/events"
+	approverequestsv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/apis/approverequests/v1alpha1"
+	approverequestclientset "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"knative.dev/pkg/apis"
 	"knative.dev/pkg/logging"
 	"knative.dev/pkg/reconciler"
@@ -42,6 +46,8 @@ type Reconciler struct {
 	pipelineClientSet clientset.Interface
 	// Listers index properties about resources
 	runLister listersalpha.RunLister
+
+	approverequestClientSet approverequestclientset.Interface
 }
 
 // Check that our Reconciler implements Interface
@@ -56,9 +62,9 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, run *v1alpha1.Run) recon
 	// Check that the Run references a APPROVEREQUEST CRD.  The logic is controller.go should ensure that only this type of Run
 	// is reconciled this controller but it never hurts to do some bullet-proofing.
 	if run.Spec.Ref == nil ||
-		run.Spec.Ref.APIVersion != exceptionv1alpha1.SchemeGroupVersion.String() ||
-		run.Spec.Ref.Kind != "Exception" {
-		logger.Errorf("Received control for a Run %s/%s that does not reference a Exception custom CRD", run.Namespace, run.Name)
+		run.Spec.Ref.APIVersion != approverequestsv1alpha1.SchemeGroupVersion.String() ||
+		run.Spec.Ref.Kind != "ApproveRequest" {
+		logger.Errorf("Received control for a Run %s/%s that does not reference a ApproveRequest CRD", run.Namespace, run.Name)
 		return nil
 	}
 
@@ -87,41 +93,17 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, run *v1alpha1.Run) recon
 	}
 
 	if run.IsCancelled() {
-		err := r.cancelExceptionHandler(ctx, run, logger)
-		if err != nil {
-			run.Status.MarkRunFailed(exceptionv1alpha1.ExceptionRunReasonCouldntCancel.String(),
-				"Cancel exception hander failed: %v", err)
-			logger.Errorf("Cancel exception hander failed: %v", err.Error())
-		}
-
+		logger.Infof("Run %s/%s is cancelled", run.Namespace, run.Name)
 		return nil
 	}
 
 	// Store the condition before reconcile
 	beforeCondition := run.Status.GetCondition(apis.ConditionSucceeded)
 
-	status := &exceptionv1alpha1.ExceptionStatus{}
-	if err := run.Status.DecodeExtraFields(status); err != nil {
-		run.Status.MarkRunFailed(exceptionv1alpha1.ExceptionRunReasonInternalError.String(),
-			"Internal error calling DecodeExtraFields: %v", err)
-		logger.Errorf("DecodeExtraFields error: %v", err.Error())
-	}
-
 	// Reconcile the Run
-	if err := r.reconcile(ctx, run, status); err != nil {
+	if err := r.reconcile(ctx, run); err != nil {
 		logger.Errorf("Reconcile error: %v", err.Error())
 		merr = multierror.Append(merr, err)
-	}
-
-	if err := r.updateLabelsAndAnnotations(ctx, run); err != nil {
-		logger.Warn("Failed to update Run labels/annotations", zap.Error(err))
-		merr = multierror.Append(merr, err)
-	}
-
-	if err := run.Status.EncodeExtraFields(status); err != nil {
-		run.Status.MarkRunFailed(exceptionv1alpha1.ExceptionRunReasonInternalError.String(),
-			"Internal error calling EncodeExtraFields: %v", err)
-		logger.Errorf("EncodeExtraFields error: %v", err.Error())
 	}
 
 	afterCondition := run.Status.GetCondition(apis.ConditionSucceeded)
@@ -129,4 +111,61 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, run *v1alpha1.Run) recon
 
 	// Only transient errors that should retry the reconcile are returned.
 	return merr
+}
+
+func (r *Reconciler) reconcile(ctx context.Context, run *v1alpha1.Run) error {
+	// logger := logging.FromContext(ctx)
+
+	// Get the ApproveRequest referenced by the Run
+	ar, err := r.getApproveRequest(ctx, run)
+	if err != nil {
+		return nil
+	}
+
+	arCopy := ar.DeepCopy()
+	//if approveRequest.requestName is not nil
+	if arCopy.Spec.RequestName == "" {
+		arCopy.Spec.RequestName = run.Name
+		arCopy.Status.Approved = false
+
+		run.Status.MarkRunRunning(approverequestsv1alpha1.ApproveRequestRunReasonRunning.String(),
+			"There is no taskrun in original pr mark as failed, wait: %s", time.Now().String())
+
+		_, err = r.approverequestClientSet.ApproverequestsV1alpha1().ApproveRequests(run.Namespace).Update(ctx, arCopy, metav1.UpdateOptions{})
+		if err != nil {
+			return fmt.Errorf("Update ApproveRequest: %s failed: %w", fmt.Sprintf("%s/%s", arCopy.Namespace, arCopy.Name), err)
+		}
+		return nil
+	} else if arCopy.Status.Approved {
+		run.Status.MarkRunSucceeded(approverequestsv1alpha1.ApproveRequestRunReasonSucceeded.String(), "The approve request is approved: %s/%s", ar.Name, ar.Namespace)
+	}
+
+	return nil
+}
+
+func (r *Reconciler) getApproveRequest(ctx context.Context, run *v1alpha1.Run) (*approverequestsv1alpha1.ApproveRequest, error) {
+	var approverequest *approverequestsv1alpha1.ApproveRequest
+
+	if run.Spec.Ref != nil && run.Spec.Ref.Name != "" {
+		// Use the k8 client to get the TaskLoop rather than the lister.  This avoids a timing issue where
+		// the TaskLoop is not yet in the lister cache if it is created at nearly the same time as the Run.
+		// See https://github.com/tektoncd/pipeline/issues/2740 for discussion on this issue.
+		ar, err := r.approverequestClientSet.ApproverequestsV1alpha1().ApproveRequests(run.Namespace).Get(ctx, run.Spec.Ref.Name, metav1.GetOptions{})
+		if err != nil {
+			run.Status.MarkRunFailed(approverequestsv1alpha1.ApproveRequestRunReasonCouldntGet.String(),
+				"Error retrieving TaskLoop for Run %s/%s: %s",
+				run.Namespace, run.Name, err)
+			return nil, fmt.Errorf("Error retrieving ApproveRequeset for Run %s: %w", fmt.Sprintf("%s/%s", run.Namespace, run.Name), err)
+		}
+
+		approverequest = ar
+	} else {
+		// Run does not require name but here it does.
+		run.Status.MarkRunFailed(approverequestsv1alpha1.ApproveRequestRunReasonCouldntGet.String(),
+			"Missing spec.ref.name for Run %s/%s",
+			run.Namespace, run.Name)
+		return nil, fmt.Errorf("Missing spec.ref.name for Run %s", fmt.Sprintf("%s/%s", run.Namespace, run.Name))
+	}
+
+	return approverequest, nil
 }

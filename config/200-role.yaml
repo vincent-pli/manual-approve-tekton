@@ -15,8 +15,8 @@
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: knative-samples-namespace-rbac
-  namespace: knative-samples
+  name: tekton-manualapprove-namespace-rbac
+  namespace: tekton-manualapprove
   labels:
     samples.knative.dev/release: devel
 rules:

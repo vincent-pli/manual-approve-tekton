@@ -19,7 +19,7 @@ metadata:
     role: webhook
     samples.knative.dev/release: devel
   name: webhook
-  namespace: knative-samples
+  namespace: tekton-manualapprove
 spec:
   ports:
     - port: 443

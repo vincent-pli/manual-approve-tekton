@@ -18,8 +18,7 @@ package main
 
 import (
 	// The set of controllers this controller process runs.
-	"knative.dev/sample-controller/pkg/reconciler/addressableservice"
-	"knative.dev/sample-controller/pkg/reconciler/simpledeployment"
+	"github.com/vincent-pli/manual-approve-tekton/pkg/reconciler/manualapprove"
 
 	// This defines the shared main for injected controllers.
 	"knative.dev/pkg/injection/sharedmain"
@@ -27,7 +26,6 @@ import (
 
 func main() {
 	sharedmain.Main("controller",
-		addressableservice.NewController,
-		simpledeployment.NewController,
+		manualapprove.NewController,
 	)
 }

@@ -18,5 +18,5 @@ package approverequests
 
 const (
 	// GroupName is the name of the API group.
-	GroupName = "approverequests.tektoncd.dev"
+	GroupName = "custom.tektoncd.dev"
 )

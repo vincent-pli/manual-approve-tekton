@@ -15,7 +15,7 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: defaulting.webhook.knative-samples.knative.dev
+  name: defaulting.webhook.tekton-manualapprove
   labels:
     samples.knative.dev/release: devel
 webhooks:
@@ -24,15 +24,15 @@ webhooks:
   clientConfig:
     service:
       name: webhook
-      namespace: knative-samples
+      namespace: tekton-manualapprove
   failurePolicy: Fail
   sideEffects: None
-  name: defaulting.webhook.knative-samples.knative.dev
+  name: defaulting.webhook.tekton-manualapprove
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: validation.webhook.knative-samples.knative.dev
+  name: validation.webhook.tekton-manualapprove
   labels:
     samples.knative.dev/release: devel
 webhooks:
@@ -41,15 +41,15 @@ webhooks:
   clientConfig:
     service:
       name: webhook
-      namespace: knative-samples
+      namespace: tekton-manualapprove
   failurePolicy: Fail
   sideEffects: None
-  name: validation.webhook.knative-samples.knative.dev
+  name: validation.webhook.tekton-manualapprove
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: config.webhook.knative-samples.knative.dev
+  name: config.webhook.tekton-manualapprove
   labels:
     serving.knative.dev/release: devel
 webhooks:
@@ -58,10 +58,10 @@ webhooks:
   clientConfig:
     service:
       name: webhook
-      namespace: knative-samples
+      namespace: tekton-manualapprove
   failurePolicy: Fail
   sideEffects: None
-  name: config.webhook.knative-samples.knative.dev
+  name: config.webhook.tekton-manualapprove
   namespaceSelector:
     matchExpressions:
     - key: samples.knative.dev/release
@@ -71,7 +71,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: webhook-certs
-  namespace: knative-samples
+  namespace: tekton-manualapprove
   labels:
     samples.knative.dev/release: devel
 # The data is populated at install time.

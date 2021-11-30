@@ -15,14 +15,14 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: knative-samples-controller-admin
+  name: tekton-manualapprove-controller-admin
   labels:
     samples.knative.dev/release: devel
 subjects:
   - kind: ServiceAccount
     name: controller
-    namespace: knative-samples
+    namespace: tekton-manualapprove
 roleRef:
   kind: ClusterRole
-  name: knative-samples-admin
+  name: tekton-manualapprove-admin
   apiGroup: rbac.authorization.k8s.io

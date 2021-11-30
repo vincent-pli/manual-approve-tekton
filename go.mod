@@ -1,4 +1,4 @@
-module github.com/vincentpli/manual-approve-tekton
+module github.com/vincent-pli/manual-approve-tekton
 
 go 1.15
 

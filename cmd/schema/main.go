@@ -22,7 +22,7 @@ import (
 	"knative.dev/hack/schema/commands"
 	"knative.dev/hack/schema/registry"
 
-	v1alpha1 "knative.dev/sample-controller/pkg/apis/samples/v1alpha1"
+	v1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/apis/approverequests/v1alpha1"
 )
 
 // schema is a tool to dump the schema for Eventing resources.

@@ -35,7 +35,7 @@ import (
 	"knative.dev/pkg/webhook/resourcesemantics/defaulting"
 	"knative.dev/pkg/webhook/resourcesemantics/validation"
 
-	"knative.dev/sample-controller/pkg/apis/samples/v1alpha1"
+	"github.com/vincent-pli/manual-approve-tekton/pkg/apis/approverequests/v1alpha1"
 )
 
 var types = map[schema.GroupVersionKind]resourcesemantics.GenericCRD{

@@ -23,67 +23,65 @@ import (
 	"knative.dev/pkg/kmeta"
 )
 
-// AddressableService is a Knative abstraction that encapsulates the interface by which Knative
+// ApproveRequest is a Knative abstraction that encapsulates the interface by which Knative
 // components express a desire to have a particular image cached.
 //
 // +genclient
 // +genreconciler
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type AddressableService struct {
+type ApproveRequest struct {
 	metav1.TypeMeta `json:",inline"`
 	// +optional
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// Spec holds the desired state of the AddressableService (from the client).
+	// Spec holds the desired state of the ApproveRequest (from the client).
 	// +optional
-	Spec AddressableServiceSpec `json:"spec,omitempty"`
+	Spec ApproveRequestSpec `json:"spec,omitempty"`
 
-	// Status communicates the observed state of the AddressableService (from the controller).
+	// Status communicates the observed state of the ApproveRequest (from the controller).
 	// +optional
-	Status AddressableServiceStatus `json:"status,omitempty"`
+	Status ApproveRequestStatus `json:"status,omitempty"`
 }
 
 var (
-	// Check that AddressableService can be validated and defaulted.
-	_ apis.Validatable   = (*AddressableService)(nil)
-	_ apis.Defaultable   = (*AddressableService)(nil)
-	_ kmeta.OwnerRefable = (*AddressableService)(nil)
+	// Check that ApproveRequest can be validated and defaulted.
+	_ apis.Validatable   = (*ApproveRequest)(nil)
+	_ apis.Defaultable   = (*ApproveRequest)(nil)
+	_ kmeta.OwnerRefable = (*ApproveRequest)(nil)
 	// Check that the type conforms to the duck Knative Resource shape.
-	_ duckv1.KRShaped = (*AddressableService)(nil)
+	_ duckv1.KRShaped = (*ApproveRequest)(nil)
 )
 
-// AddressableServiceSpec holds the desired state of the AddressableService (from the client).
-type AddressableServiceSpec struct {
-	// ServiceName holds the name of the Kubernetes Service to expose as an "addressable".
-	ServiceName string `json:"serviceName"`
+// ApproveRequestSpec holds the desired state of the ApproveRequest (from the client).
+type ApproveRequestSpec struct {
+	// FoolName holds the name of the Kubernetes Service to expose as an "addressable".
+	FoolName string `json:"foolName"`
 }
 
 const (
-	// AddressableServiceConditionReady is set when the revision is starting to materialize
+	// ApproveRequestConditionReady is set when the revision is starting to materialize
 	// runtime resources, and becomes true when those resources are ready.
-	AddressableServiceConditionReady = apis.ConditionReady
+	ApproveRequestConditionReady = apis.ConditionReady
 )
 
-// AddressableServiceStatus communicates the observed state of the AddressableService (from the controller).
-type AddressableServiceStatus struct {
+// ApproveRequestStatus communicates the observed state of the ApproveRequest (from the controller).
+type ApproveRequestStatus struct {
 	duckv1.Status `json:",inline"`
-
-	// Address holds the information needed to connect this Addressable up to receive events.
-	// +optional
-	Address *duckv1.Addressable `json:"address,omitempty"`
+	// Approved shows if the request has been approved or not
+	Approved bool `json:"approved,omitempty"`
 }
 
-// AddressableServiceList is a list of AddressableService resources
+// ApproveRequestList is a list of ApproveRequest resources
 //
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-type AddressableServiceList struct {
+type ApproveRequestList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
 
-	Items []AddressableService `json:"items"`
+	Items []ApproveRequest `json:"items"`
 }
 
 // GetStatus retrieves the status of the resource. Implements the KRShaped interface.
-func (as *AddressableService) GetStatus() *duckv1.Status {
+func (as *ApproveRequest) GetStatus() *duckv1.Status {
 	return &as.Status.Status
 }

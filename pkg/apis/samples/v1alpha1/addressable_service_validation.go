@@ -23,12 +23,12 @@ import (
 )
 
 // Validate implements apis.Validatable
-func (as *AddressableService) Validate(ctx context.Context) *apis.FieldError {
+func (as *ApproveRequest) Validate(ctx context.Context) *apis.FieldError {
 	return as.Spec.Validate(ctx).ViaField("spec")
 }
 
 // Validate implements apis.Validatable
-func (ass *AddressableServiceSpec) Validate(ctx context.Context) *apis.FieldError {
+func (ass *ApproveRequestSpec) Validate(ctx context.Context) *apis.FieldError {
 	if ass.ServiceName == "" {
 		return apis.ErrMissingField("serviceName")
 	}

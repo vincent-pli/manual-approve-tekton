@@ -21,6 +21,6 @@ import (
 )
 
 // SetDefaults implements apis.Defaultable
-func (as *AddressableService) SetDefaults(ctx context.Context) {
+func (as *ApproveRequest) SetDefaults(ctx context.Context) {
 	// Nothing to default.
 }

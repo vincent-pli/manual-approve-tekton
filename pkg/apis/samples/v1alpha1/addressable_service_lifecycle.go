@@ -24,27 +24,27 @@ import (
 var condSet = apis.NewLivingConditionSet()
 
 // GetGroupVersionKind implements kmeta.OwnerRefable
-func (*AddressableService) GetGroupVersionKind() schema.GroupVersionKind {
-	return SchemeGroupVersion.WithKind("AddressableService")
+func (*ApproveRequest) GetGroupVersionKind() schema.GroupVersionKind {
+	return SchemeGroupVersion.WithKind("ApproveRequest")
 }
 
 // GetConditionSet retrieves the condition set for this resource. Implements the KRShaped interface.
-func (as *AddressableService) GetConditionSet() apis.ConditionSet {
+func (as *ApproveRequest) GetConditionSet() apis.ConditionSet {
 	return condSet
 }
 
 // InitializeConditions sets the initial values to the conditions.
-func (ass *AddressableServiceStatus) InitializeConditions() {
+func (ass *ApproveRequestStatus) InitializeConditions() {
 	condSet.Manage(ass).InitializeConditions()
 }
 
-func (ass *AddressableServiceStatus) MarkServiceUnavailable(name string) {
+func (ass *ApproveRequestStatus) MarkServiceUnavailable(name string) {
 	condSet.Manage(ass).MarkFalse(
-		AddressableServiceConditionReady,
+		ApproveRequestConditionReady,
 		"ServiceUnavailable",
 		"Service %q wasn't found.", name)
 }
 
-func (ass *AddressableServiceStatus) MarkServiceAvailable() {
-	condSet.Manage(ass).MarkTrue(AddressableServiceConditionReady)
+func (ass *ApproveRequestStatus) MarkServiceAvailable() {
+	condSet.Manage(ass).MarkTrue(ApproveRequestConditionReady)
 }

@@ -55,7 +55,7 @@ func withInformer(ctx context.Context) (context.Context, []controller.Informer) 
 	infs := []controller.Informer{}
 	for _, selector := range labelSelectors {
 		f := filtered.Get(ctx, selector)
-		inf := f.Approverequests().V1alpha1().ApproveRequests()
+		inf := f.Custom().V1alpha1().ApproveRequests()
 		ctx = context.WithValue(ctx, Key{Selector: selector}, inf)
 		infs = append(infs, inf.Informer())
 	}
@@ -115,7 +115,7 @@ func (w *wrapper) List(selector labels.Selector) (ret []*apisapproverequestsv1al
 		return nil, err
 	}
 	selector = selector.Add(reqs...)
-	lo, err := w.client.ApproverequestsV1alpha1().ApproveRequests(w.namespace).List(context.TODO(), v1.ListOptions{
+	lo, err := w.client.CustomV1alpha1().ApproveRequests(w.namespace).List(context.TODO(), v1.ListOptions{
 		LabelSelector: selector.String(),
 		// TODO(mattmoor): Incorporate resourceVersion bounds based on staleness criteria.
 	})
@@ -130,7 +130,7 @@ func (w *wrapper) List(selector labels.Selector) (ret []*apisapproverequestsv1al
 
 func (w *wrapper) Get(name string) (*apisapproverequestsv1alpha1.ApproveRequest, error) {
 	// TODO(mattmoor): Check that the fetched object matches the selector.
-	return w.client.ApproverequestsV1alpha1().ApproveRequests(w.namespace).Get(context.TODO(), name, v1.GetOptions{
+	return w.client.CustomV1alpha1().ApproveRequests(w.namespace).Get(context.TODO(), name, v1.GetOptions{
 		// TODO(mattmoor): Incorporate resourceVersion bounds based on staleness criteria.
 	})
 }

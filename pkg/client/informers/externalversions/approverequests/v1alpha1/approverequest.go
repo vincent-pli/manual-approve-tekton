@@ -62,13 +62,13 @@ func NewFilteredApproveRequestInformer(client versioned.Interface, namespace str
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ApproverequestsV1alpha1().ApproveRequests(namespace).List(context.TODO(), options)
+				return client.CustomV1alpha1().ApproveRequests(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.ApproverequestsV1alpha1().ApproveRequests(namespace).Watch(context.TODO(), options)
+				return client.CustomV1alpha1().ApproveRequests(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&approverequestsv1alpha1.ApproveRequest{},

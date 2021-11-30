@@ -20,8 +20,8 @@ package fake
 
 import (
 	clientset "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned"
-	approverequestsv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1"
-	fakeapproverequestsv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1/fake"
+	customv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1"
+	fakecustomv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -76,7 +76,7 @@ func (c *Clientset) Tracker() testing.ObjectTracker {
 
 var _ clientset.Interface = &Clientset{}
 
-// ApproverequestsV1alpha1 retrieves the ApproverequestsV1alpha1Client
-func (c *Clientset) ApproverequestsV1alpha1() approverequestsv1alpha1.ApproverequestsV1alpha1Interface {
-	return &fakeapproverequestsv1alpha1.FakeApproverequestsV1alpha1{Fake: &c.Fake}
+// CustomV1alpha1 retrieves the CustomV1alpha1Client
+func (c *Clientset) CustomV1alpha1() customv1alpha1.CustomV1alpha1Interface {
+	return &fakecustomv1alpha1.FakeCustomV1alpha1{Fake: &c.Fake}
 }

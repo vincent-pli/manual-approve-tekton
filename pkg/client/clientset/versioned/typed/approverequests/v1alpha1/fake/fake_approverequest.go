@@ -32,13 +32,13 @@ import (
 
 // FakeApproveRequests implements ApproveRequestInterface
 type FakeApproveRequests struct {
-	Fake *FakeApproverequestsV1alpha1
+	Fake *FakeCustomV1alpha1
 	ns   string
 }
 
-var approverequestsResource = schema.GroupVersionResource{Group: "approverequests.tektoncd.dev", Version: "v1alpha1", Resource: "approverequests"}
+var approverequestsResource = schema.GroupVersionResource{Group: "custom.tektoncd.dev", Version: "v1alpha1", Resource: "approverequests"}
 
-var approverequestsKind = schema.GroupVersionKind{Group: "approverequests.tektoncd.dev", Version: "v1alpha1", Kind: "ApproveRequest"}
+var approverequestsKind = schema.GroupVersionKind{Group: "custom.tektoncd.dev", Version: "v1alpha1", Kind: "ApproveRequest"}
 
 // Get takes name of the approveRequest, and returns the corresponding approveRequest object, and an error if there is any.
 func (c *FakeApproveRequests) Get(ctx context.Context, name string, options v1.GetOptions) (result *v1alpha1.ApproveRequest, err error) {

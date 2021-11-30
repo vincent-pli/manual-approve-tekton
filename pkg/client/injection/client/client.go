@@ -26,7 +26,7 @@ import (
 
 	v1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/apis/approverequests/v1alpha1"
 	versioned "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned"
-	typedapproverequestsv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1"
+	typedcustomv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	unstructured "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -96,25 +96,25 @@ func convert(from interface{}, to runtime.Object) error {
 	return nil
 }
 
-// ApproverequestsV1alpha1 retrieves the ApproverequestsV1alpha1Client
-func (w *wrapClient) ApproverequestsV1alpha1() typedapproverequestsv1alpha1.ApproverequestsV1alpha1Interface {
-	return &wrapApproverequestsV1alpha1{
+// CustomV1alpha1 retrieves the CustomV1alpha1Client
+func (w *wrapClient) CustomV1alpha1() typedcustomv1alpha1.CustomV1alpha1Interface {
+	return &wrapCustomV1alpha1{
 		dyn: w.dyn,
 	}
 }
 
-type wrapApproverequestsV1alpha1 struct {
+type wrapCustomV1alpha1 struct {
 	dyn dynamic.Interface
 }
 
-func (w *wrapApproverequestsV1alpha1) RESTClient() rest.Interface {
+func (w *wrapCustomV1alpha1) RESTClient() rest.Interface {
 	panic("RESTClient called on dynamic client!")
 }
 
-func (w *wrapApproverequestsV1alpha1) ApproveRequests(namespace string) typedapproverequestsv1alpha1.ApproveRequestInterface {
-	return &wrapApproverequestsV1alpha1ApproveRequestImpl{
+func (w *wrapCustomV1alpha1) ApproveRequests(namespace string) typedcustomv1alpha1.ApproveRequestInterface {
+	return &wrapCustomV1alpha1ApproveRequestImpl{
 		dyn: w.dyn.Resource(schema.GroupVersionResource{
-			Group:    "approverequests.tektoncd.dev",
+			Group:    "custom.tektoncd.dev",
 			Version:  "v1alpha1",
 			Resource: "approverequests",
 		}),
@@ -123,17 +123,17 @@ func (w *wrapApproverequestsV1alpha1) ApproveRequests(namespace string) typedapp
 	}
 }
 
-type wrapApproverequestsV1alpha1ApproveRequestImpl struct {
+type wrapCustomV1alpha1ApproveRequestImpl struct {
 	dyn dynamic.NamespaceableResourceInterface
 
 	namespace string
 }
 
-var _ typedapproverequestsv1alpha1.ApproveRequestInterface = (*wrapApproverequestsV1alpha1ApproveRequestImpl)(nil)
+var _ typedcustomv1alpha1.ApproveRequestInterface = (*wrapCustomV1alpha1ApproveRequestImpl)(nil)
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Create(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.CreateOptions) (*v1alpha1.ApproveRequest, error) {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) Create(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.CreateOptions) (*v1alpha1.ApproveRequest, error) {
 	in.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "approverequests.tektoncd.dev",
+		Group:   "custom.tektoncd.dev",
 		Version: "v1alpha1",
 		Kind:    "ApproveRequest",
 	})
@@ -152,15 +152,15 @@ func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Create(ctx context.Conte
 	return out, nil
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return w.dyn.Namespace(w.namespace).Delete(ctx, name, opts)
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
 	return w.dyn.Namespace(w.namespace).DeleteCollection(ctx, opts, listOpts)
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.ApproveRequest, error) {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) Get(ctx context.Context, name string, opts v1.GetOptions) (*v1alpha1.ApproveRequest, error) {
 	uo, err := w.dyn.Namespace(w.namespace).Get(ctx, name, opts)
 	if err != nil {
 		return nil, err
@@ -172,7 +172,7 @@ func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Get(ctx context.Context,
 	return out, nil
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.ApproveRequestList, error) {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) List(ctx context.Context, opts v1.ListOptions) (*v1alpha1.ApproveRequestList, error) {
 	uo, err := w.dyn.Namespace(w.namespace).List(ctx, opts)
 	if err != nil {
 		return nil, err
@@ -184,7 +184,7 @@ func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) List(ctx context.Context
 	return out, nil
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ApproveRequest, err error) {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *v1alpha1.ApproveRequest, err error) {
 	uo, err := w.dyn.Namespace(w.namespace).Patch(ctx, name, pt, data, opts)
 	if err != nil {
 		return nil, err
@@ -196,9 +196,9 @@ func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Patch(ctx context.Contex
 	return out, nil
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Update(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.UpdateOptions) (*v1alpha1.ApproveRequest, error) {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) Update(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.UpdateOptions) (*v1alpha1.ApproveRequest, error) {
 	in.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "approverequests.tektoncd.dev",
+		Group:   "custom.tektoncd.dev",
 		Version: "v1alpha1",
 		Kind:    "ApproveRequest",
 	})
@@ -217,9 +217,9 @@ func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Update(ctx context.Conte
 	return out, nil
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) UpdateStatus(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.UpdateOptions) (*v1alpha1.ApproveRequest, error) {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) UpdateStatus(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.UpdateOptions) (*v1alpha1.ApproveRequest, error) {
 	in.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "approverequests.tektoncd.dev",
+		Group:   "custom.tektoncd.dev",
 		Version: "v1alpha1",
 		Kind:    "ApproveRequest",
 	})
@@ -238,6 +238,6 @@ func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) UpdateStatus(ctx context
 	return out, nil
 }
 
-func (w *wrapApproverequestsV1alpha1ApproveRequestImpl) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (w *wrapCustomV1alpha1ApproveRequestImpl) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return nil, errors.New("NYI: Watch")
 }

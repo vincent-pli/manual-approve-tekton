@@ -52,9 +52,9 @@ func (f *genericInformer) Lister() cache.GenericLister {
 // TODO extend this to unknown resources with a client pool
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
-	// Group=approverequests.tektoncd.dev, Version=v1alpha1
+	// Group=custom.tektoncd.dev, Version=v1alpha1
 	case v1alpha1.SchemeGroupVersion.WithResource("approverequests"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Approverequests().V1alpha1().ApproveRequests().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Custom().V1alpha1().ApproveRequests().Informer()}, nil
 
 	}
 

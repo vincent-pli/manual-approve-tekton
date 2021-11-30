@@ -57,7 +57,7 @@ type approveRequests struct {
 }
 
 // newApproveRequests returns a ApproveRequests
-func newApproveRequests(c *ApproverequestsV1alpha1Client, namespace string) *approveRequests {
+func newApproveRequests(c *CustomV1alpha1Client, namespace string) *approveRequests {
 	return &approveRequests{
 		client: c.RESTClient(),
 		ns:     namespace,

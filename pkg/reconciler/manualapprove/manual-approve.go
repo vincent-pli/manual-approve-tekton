@@ -131,7 +131,7 @@ func (r *Reconciler) reconcile(ctx context.Context, run *v1alpha1.Run) error {
 		run.Status.MarkRunRunning(approverequestsv1alpha1.ApproveRequestRunReasonRunning.String(),
 			"There is no taskrun in original pr mark as failed, wait: %s", time.Now().String())
 
-		_, err = r.approverequestClientSet.ApproverequestsV1alpha1().ApproveRequests(run.Namespace).Update(ctx, arCopy, metav1.UpdateOptions{})
+		_, err = r.approverequestClientSet.CustomV1alpha1().ApproveRequests(run.Namespace).Update(ctx, arCopy, metav1.UpdateOptions{})
 		if err != nil {
 			return fmt.Errorf("Update ApproveRequest: %s failed: %w", fmt.Sprintf("%s/%s", arCopy.Namespace, arCopy.Name), err)
 		}
@@ -150,7 +150,7 @@ func (r *Reconciler) getApproveRequest(ctx context.Context, run *v1alpha1.Run) (
 		// Use the k8 client to get the TaskLoop rather than the lister.  This avoids a timing issue where
 		// the TaskLoop is not yet in the lister cache if it is created at nearly the same time as the Run.
 		// See https://github.com/tektoncd/pipeline/issues/2740 for discussion on this issue.
-		ar, err := r.approverequestClientSet.ApproverequestsV1alpha1().ApproveRequests(run.Namespace).Get(ctx, run.Spec.Ref.Name, metav1.GetOptions{})
+		ar, err := r.approverequestClientSet.CustomV1alpha1().ApproveRequests(run.Namespace).Get(ctx, run.Spec.Ref.Name, metav1.GetOptions{})
 		if err != nil {
 			run.Status.MarkRunFailed(approverequestsv1alpha1.ApproveRequestRunReasonCouldntGet.String(),
 				"Error retrieving TaskLoop for Run %s/%s: %s",

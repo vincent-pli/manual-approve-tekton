@@ -24,17 +24,17 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeApproverequestsV1alpha1 struct {
+type FakeCustomV1alpha1 struct {
 	*testing.Fake
 }
 
-func (c *FakeApproverequestsV1alpha1) ApproveRequests(namespace string) v1alpha1.ApproveRequestInterface {
+func (c *FakeCustomV1alpha1) ApproveRequests(namespace string) v1alpha1.ApproveRequestInterface {
 	return &FakeApproveRequests{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeApproverequestsV1alpha1) RESTClient() rest.Interface {
+func (c *FakeCustomV1alpha1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

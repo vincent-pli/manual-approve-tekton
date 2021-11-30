@@ -172,9 +172,9 @@ type SharedInformerFactory interface {
 	ForResource(resource schema.GroupVersionResource) (GenericInformer, error)
 	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
 
-	Approverequests() approverequests.Interface
+	Custom() approverequests.Interface
 }
 
-func (f *sharedInformerFactory) Approverequests() approverequests.Interface {
+func (f *sharedInformerFactory) Custom() approverequests.Interface {
 	return approverequests.New(f, f.namespace, f.tweakListOptions)
 }

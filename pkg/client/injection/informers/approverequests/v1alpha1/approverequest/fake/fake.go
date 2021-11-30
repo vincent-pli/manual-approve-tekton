@@ -35,6 +35,6 @@ func init() {
 
 func withInformer(ctx context.Context) (context.Context, controller.Informer) {
 	f := fake.Get(ctx)
-	inf := f.Approverequests().V1alpha1().ApproveRequests()
+	inf := f.Custom().V1alpha1().ApproveRequests()
 	return context.WithValue(ctx, approverequest.Key{}, inf), inf.Informer()
 }

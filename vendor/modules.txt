@@ -252,6 +252,7 @@ golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
 # golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac
+## explicit
 golang.org/x/time/rate
 # golang.org/x/tools v0.1.7
 golang.org/x/tools/go/ast/astutil
@@ -771,8 +772,6 @@ knative.dev/pkg/changeset
 knative.dev/pkg/client/injection/kube/client
 knative.dev/pkg/client/injection/kube/informers/admissionregistration/v1/mutatingwebhookconfiguration
 knative.dev/pkg/client/injection/kube/informers/admissionregistration/v1/validatingwebhookconfiguration
-knative.dev/pkg/client/injection/kube/informers/core/v1/pod
-knative.dev/pkg/client/injection/kube/informers/core/v1/service
 knative.dev/pkg/client/injection/kube/informers/factory
 knative.dev/pkg/codegen/cmd/injection-gen
 knative.dev/pkg/codegen/cmd/injection-gen/args
@@ -813,26 +812,6 @@ knative.dev/pkg/webhook/json
 knative.dev/pkg/webhook/resourcesemantics
 knative.dev/pkg/webhook/resourcesemantics/defaulting
 knative.dev/pkg/webhook/resourcesemantics/validation
-# knative.dev/sample-controller v0.27.0
-## explicit
-knative.dev/sample-controller/pkg/apis/samples
-knative.dev/sample-controller/pkg/apis/samples/v1alpha1
-knative.dev/sample-controller/pkg/client/clientset/versioned
-knative.dev/sample-controller/pkg/client/clientset/versioned/scheme
-knative.dev/sample-controller/pkg/client/clientset/versioned/typed/samples/v1alpha1
-knative.dev/sample-controller/pkg/client/informers/externalversions
-knative.dev/sample-controller/pkg/client/informers/externalversions/internalinterfaces
-knative.dev/sample-controller/pkg/client/informers/externalversions/samples
-knative.dev/sample-controller/pkg/client/informers/externalversions/samples/v1alpha1
-knative.dev/sample-controller/pkg/client/injection/client
-knative.dev/sample-controller/pkg/client/injection/informers/factory
-knative.dev/sample-controller/pkg/client/injection/informers/samples/v1alpha1/addressableservice
-knative.dev/sample-controller/pkg/client/injection/informers/samples/v1alpha1/simpledeployment
-knative.dev/sample-controller/pkg/client/injection/reconciler/samples/v1alpha1/addressableservice
-knative.dev/sample-controller/pkg/client/injection/reconciler/samples/v1alpha1/simpledeployment
-knative.dev/sample-controller/pkg/client/listers/samples/v1alpha1
-knative.dev/sample-controller/pkg/reconciler/addressableservice
-knative.dev/sample-controller/pkg/reconciler/simpledeployment
 # sigs.k8s.io/structured-merge-diff/v4 v4.1.2
 sigs.k8s.io/structured-merge-diff/v4/fieldpath
 sigs.k8s.io/structured-merge-diff/v4/schema

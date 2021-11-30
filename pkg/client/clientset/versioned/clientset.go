@@ -21,7 +21,7 @@ package versioned
 import (
 	"fmt"
 
-	approverequestsv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1"
+	customv1alpha1 "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/typed/approverequests/v1alpha1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -29,19 +29,19 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	ApproverequestsV1alpha1() approverequestsv1alpha1.ApproverequestsV1alpha1Interface
+	CustomV1alpha1() customv1alpha1.CustomV1alpha1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one
 // version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	approverequestsV1alpha1 *approverequestsv1alpha1.ApproverequestsV1alpha1Client
+	customV1alpha1 *customv1alpha1.CustomV1alpha1Client
 }
 
-// ApproverequestsV1alpha1 retrieves the ApproverequestsV1alpha1Client
-func (c *Clientset) ApproverequestsV1alpha1() approverequestsv1alpha1.ApproverequestsV1alpha1Interface {
-	return c.approverequestsV1alpha1
+// CustomV1alpha1 retrieves the CustomV1alpha1Client
+func (c *Clientset) CustomV1alpha1() customv1alpha1.CustomV1alpha1Interface {
+	return c.customV1alpha1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -65,7 +65,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 	}
 	var cs Clientset
 	var err error
-	cs.approverequestsV1alpha1, err = approverequestsv1alpha1.NewForConfig(&configShallowCopy)
+	cs.customV1alpha1, err = customv1alpha1.NewForConfig(&configShallowCopy)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func NewForConfig(c *rest.Config) (*Clientset, error) {
 // panics if there is an error in the config.
 func NewForConfigOrDie(c *rest.Config) *Clientset {
 	var cs Clientset
-	cs.approverequestsV1alpha1 = approverequestsv1alpha1.NewForConfigOrDie(c)
+	cs.customV1alpha1 = customv1alpha1.NewForConfigOrDie(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClientForConfigOrDie(c)
 	return &cs
@@ -90,7 +90,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.approverequestsV1alpha1 = approverequestsv1alpha1.New(c)
+	cs.customV1alpha1 = customv1alpha1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

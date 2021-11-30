@@ -18,5 +18,5 @@ package samples
 
 const (
 	// GroupName is the name of the API group.
-	GroupName = "samples.knative.dev"
+	GroupName = "approverequests.tektoncd.dev"
 )

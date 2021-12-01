@@ -35,7 +35,7 @@ spec:
               description: Spec holds the desired state of the AddressableService (from the client).
               type: object
               properties:
-                requstName:
+                dummy:
                   description: RequstName holds the name of the Tekton.Run which request a manual approve.
                   type: string
             status:
@@ -45,6 +45,9 @@ spec:
                 approved:
                   description: approved display if the approve request has been approved.
                   type: boolean
+                requstName:
+                  description: RequstName holds the name of the Tekton.Run which request a manual approve.
+                  type: string
                 conditions:
                   description: Conditions the latest available observations of a resource's current state.
                   type: array

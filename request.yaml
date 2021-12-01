@@ -1,0 +1,6 @@
+apiVersion: custom.tekton.dev/v1alpha1
+kind: ApproveRequest
+metadata:
+  name: request
+  namespace: tekton-manualapprove
+spec: {}

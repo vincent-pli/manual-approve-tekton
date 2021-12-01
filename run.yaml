@@ -1,0 +1,13 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Run
+metadata:
+  name: request-run
+  namespace: tekton-manualapprove
+spec:
+  ref:
+    apiVersion: custom.tekton.dev/v1alpha1
+    kind: ApproveRequest
+    name: request
+  params:
+  - name: pipelinerun_name
+    value: guarded-pr-6bbfs

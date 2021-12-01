@@ -123,15 +123,17 @@ func (r *Reconciler) reconcile(ctx context.Context, run *v1alpha1.Run) error {
 	}
 
 	arCopy := ar.DeepCopy()
+	fmt.Println("---------")
+	fmt.Printf("=== %+v", arCopy)
 	//if approveRequest.requestName is not nil
-	if arCopy.Spec.RequestName == "" {
-		arCopy.Spec.RequestName = run.Name
+	if arCopy.Status.RequestName == "" {
+		arCopy.Status.RequestName = run.Name
 		arCopy.Status.Approved = false
 
 		run.Status.MarkRunRunning(approverequestsv1alpha1.ApproveRequestRunReasonRunning.String(),
 			"There is no taskrun in original pr mark as failed, wait: %s", time.Now().String())
 
-		_, err = r.approverequestClientSet.CustomV1alpha1().ApproveRequests(run.Namespace).Update(ctx, arCopy, metav1.UpdateOptions{})
+		_, err = r.approverequestClientSet.CustomV1alpha1().ApproveRequests(run.Namespace).UpdateStatus(ctx, arCopy, metav1.UpdateOptions{})
 		if err != nil {
 			return fmt.Errorf("Update ApproveRequest: %s failed: %w", fmt.Sprintf("%s/%s", arCopy.Namespace, arCopy.Name), err)
 		}

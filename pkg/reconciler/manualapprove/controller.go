@@ -18,8 +18,10 @@ package manualapprove
 
 import (
 	"context"
+	"fmt"
 
 	"go.uber.org/zap"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/cache"
 	"knative.dev/pkg/configmap"
@@ -31,6 +33,7 @@ import (
 	runreconciler "github.com/tektoncd/pipeline/pkg/client/injection/reconciler/pipeline/v1alpha1/run"
 	pipelinecontroller "github.com/tektoncd/pipeline/pkg/controller"
 	"github.com/vincent-pli/manual-approve-tekton/pkg/apis/approverequests/v1alpha1"
+	scheme "github.com/vincent-pli/manual-approve-tekton/pkg/client/clientset/versioned/scheme"
 	approverequestclient "github.com/vincent-pli/manual-approve-tekton/pkg/client/injection/client"
 	approverequestinformer "github.com/vincent-pli/manual-approve-tekton/pkg/client/injection/informers/approverequests/v1alpha1/approverequest"
 )
@@ -79,7 +82,7 @@ func NewController(
 }
 
 func (e *Enqueue) EnqueueReferenceRun(obj interface{}) {
-	ar, ok := obj.(v1alpha1.ApproveRequest)
+	ar, ok := obj.(*v1alpha1.ApproveRequest)
 	if !ok {
 		e.logger.Error("Not a ApproveRequest")
 		return
@@ -87,7 +90,27 @@ func (e *Enqueue) EnqueueReferenceRun(obj interface{}) {
 
 	// If we can determine the controller ref of this object, then
 	// add that object to our workqueue.
-	if refrence := ar.Spec.RequestName; refrence != "" {
+	if refrence := ar.Status.RequestName; refrence != "" {
 		e.impl.EnqueueKey(types.NamespacedName{Namespace: ar.GetNamespace(), Name: refrence})
 	}
+}
+
+func addTypeInformationToObject(obj runtime.Object) error {
+	gvks, _, err := scheme.Scheme.ObjectKinds(obj)
+	if err != nil {
+		return fmt.Errorf("missing apiVersion or kind and cannot assign it; %w", err)
+	}
+
+	for _, gvk := range gvks {
+		if len(gvk.Kind) == 0 {
+			continue
+		}
+		if len(gvk.Version) == 0 || gvk.Version == runtime.APIVersionInternal {
+			continue
+		}
+		obj.GetObjectKind().SetGroupVersionKind(gvk)
+		break
+	}
+
+	return nil
 }

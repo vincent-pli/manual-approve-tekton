@@ -30,23 +30,23 @@ func (e RunReason) String() string {
 	return string(e)
 }
 
-const (
-	// ApproveRequestConditionReady is set when the revision is starting to materialize
-	// runtime resources, and becomes true when those resources are ready.
-	// ApproveRequestConditionReady = apis.ConditionReady
-	// ExceptionRunReasonInternalError indicates that the Exception failed due to an internal error in the reconciler
-	ExceptionRunReasonInternalError RunReason = "ExceptionInternalError"
-	// ExceptionRunReasonCouldntCancel indicates that the Exception failed due to an internal error in the reconciler
-	ExceptionRunReasonCouldntCancel RunReason = "CouldntCancel"
-	// ExceptionRunReasonCouldntGet indicates that the associated Exception couldn't be retrieved
-	// ApproveRequestRunReasonCouldntGet RunReason = "CouldntGet"
-	// ExceptionRunReasonCouldntGetOriginalPipelinerun indicates that the associated Exception couldn't be retrieved
-	ExceptionRunReasonCouldntGetOriginalPipelinerun RunReason = "CouldntGetOriginalPipelinerun"
-	// ExceptionRunReasonNoError indicates that the original Pipelinerun has no error
-	ExceptionRunReasonNoError RunReason = "NoError"
-	// ExceptionRunReasonCoundntCreate indicates that could not create new pipelinerun
-	ExceptionRunReasonCoundntCreate RunReason = "CoundntCreate"
-)
+// const (
+// 	// ApproveRequestConditionReady is set when the revision is starting to materialize
+// 	// runtime resources, and becomes true when those resources are ready.
+// 	// ApproveRequestConditionReady = apis.ConditionReady
+// 	// ExceptionRunReasonInternalError indicates that the Exception failed due to an internal error in the reconciler
+// 	ExceptionRunReasonInternalError RunReason = "ExceptionInternalError"
+// 	// ExceptionRunReasonCouldntCancel indicates that the Exception failed due to an internal error in the reconciler
+// 	ExceptionRunReasonCouldntCancel RunReason = "CouldntCancel"
+// 	// ExceptionRunReasonCouldntGet indicates that the associated Exception couldn't be retrieved
+// 	// ApproveRequestRunReasonCouldntGet RunReason = "CouldntGet"
+// 	// ExceptionRunReasonCouldntGetOriginalPipelinerun indicates that the associated Exception couldn't be retrieved
+// 	ExceptionRunReasonCouldntGetOriginalPipelinerun RunReason = "CouldntGetOriginalPipelinerun"
+// 	// ExceptionRunReasonNoError indicates that the original Pipelinerun has no error
+// 	ExceptionRunReasonNoError RunReason = "NoError"
+// 	// ExceptionRunReasonCoundntCreate indicates that could not create new pipelinerun
+// 	ExceptionRunReasonCoundntCreate RunReason = "CoundntCreate"
+// )
 
 // ApproveRequest is a Knative abstraction that encapsulates the interface by which Knative
 // components express a desire to have a particular image cached.
@@ -80,7 +80,7 @@ var (
 // ApproveRequestSpec holds the desired state of the ApproveRequest (from the client).
 type ApproveRequestSpec struct {
 	// RequstName holds the name of the Kubernetes Service to expose as an "addressable".
-	RequestName string `json:"requstName"`
+	Dummy string `json:"dummy,omitempty"`
 }
 
 const (
@@ -97,7 +97,9 @@ const (
 
 // ApproveRequestStatus communicates the observed state of the ApproveRequest (from the controller).
 type ApproveRequestStatus struct {
-	duckv1.Status `json:",inline"`
+	duckv1.Status `json:",inline,omitempty"`
+	// RequstName holds the name of the Kubernetes Service to expose as an "addressable".
+	RequestName string `json:"requstName,omitempty"`
 	// Approved shows if the request has been approved or not
 	Approved bool `json:"approved,omitempty"`
 }

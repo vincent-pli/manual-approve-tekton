@@ -44,7 +44,7 @@ import (
 
 const (
 	defaultControllerAgentName = "approverequest-controller"
-	defaultFinalizerName       = "approverequests.custom.tektoncd.dev"
+	defaultFinalizerName       = "approverequests.custom.tekton.dev"
 )
 
 // NewImpl returns a controller.Impl that handles queuing and feeding work from
@@ -98,7 +98,7 @@ func NewImpl(ctx context.Context, r Interface, optionsFns ...controller.OptionsF
 
 	logger = logger.With(
 		zap.String(logkey.ControllerType, ctrTypeName),
-		zap.String(logkey.Kind, "custom.tektoncd.dev.ApproveRequest"),
+		zap.String(logkey.Kind, "custom.tekton.dev.ApproveRequest"),
 	)
 
 	impl := controller.NewContext(ctx, rec, controller.ControllerOptions{WorkQueueName: ctrTypeName, Logger: logger})

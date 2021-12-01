@@ -29,7 +29,7 @@ type CustomV1alpha1Interface interface {
 	ApproveRequestsGetter
 }
 
-// CustomV1alpha1Client is used to interact with features provided by the custom.tektoncd.dev group.
+// CustomV1alpha1Client is used to interact with features provided by the custom.tekton.dev group.
 type CustomV1alpha1Client struct {
 	restClient rest.Interface
 }

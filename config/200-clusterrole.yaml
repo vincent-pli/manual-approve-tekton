@@ -21,7 +21,7 @@ metadata:
 aggregationRule:
   clusterRoleSelectors:
   - matchLabels:
-      custom.tektoncd.dev/controller: "true"
+      custom.tekton.dev/controller: "true"
 rules: [] # Rules are automatically filled in by the controller manager.
 
 ---
@@ -31,7 +31,7 @@ metadata:
   name: tekton-manualapprove-core
   labels:
     samples.knative.dev/release: devel
-    custom.tektoncd.dev/controller: "true"
+    custom.tekton.dev/controller: "true"
 rules:
   # Allow creating events associated with resources we are controlling.
   - apiGroups: [""]
@@ -69,10 +69,17 @@ rules:
     resourceNames: ["addressableservices.samples.knative.dev", "simpledeployments.samples.knative.dev"]
 
   # Allow us to reconcile our resources.
-  - apiGroups: ["custom.tektoncd.dev"]
+  - apiGroups: ["custom.tekton.dev"]
     resources: ["*"]
     verbs: ["get", "list", "update", "watch"]
 
+  - apiGroups: ["tekton.dev"]
+    resources: ["runs", "pipelineruns"]
+    verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+  - apiGroups: ["tekton.dev"]
+    resources: ["runs/status", "pipelineruns/status"]
+    verbs: ["get", "list", "create", "update", "delete", "patch", "watch"]
+    
   # The webhook configured the namespace as the OwnerRef on various cluster-scoped resources,
   # which requires we can Get the system namespace.
   - apiGroups: [""]
@@ -89,7 +96,7 @@ metadata:
   name: tekton-manualapprove-resources
   labels:
     samples.knative.dev/release: devel
-    custom.tektoncd.dev/controller: "true"
+    custom.tekton.dev/controller: "true"
 rules:
   # AddressableService tracks services, so it needs to be able to list
   # and watch those in whatever namespace folks create those CRDs in

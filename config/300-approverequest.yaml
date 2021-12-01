@@ -15,12 +15,12 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: approverequests.custom.tektoncd.dev
+  name: approverequests.custom.tekton.dev
   labels:
     samples.knative.dev/release: devel
     knative.dev/crd-install: "true"
 spec:
-  group: custom.tektoncd.dev
+  group: custom.tekton.dev
   versions:
     - name: v1alpha1
       served: true

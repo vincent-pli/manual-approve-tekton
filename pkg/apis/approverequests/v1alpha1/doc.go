@@ -15,5 +15,5 @@ limitations under the License.
 */
 
 // +k8s:deepcopy-gen=package
-// +groupName=custom.tektoncd.dev
+// +groupName=custom.tekton.dev
 package v1alpha1

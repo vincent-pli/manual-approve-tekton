@@ -114,7 +114,7 @@ func (w *wrapCustomV1alpha1) RESTClient() rest.Interface {
 func (w *wrapCustomV1alpha1) ApproveRequests(namespace string) typedcustomv1alpha1.ApproveRequestInterface {
 	return &wrapCustomV1alpha1ApproveRequestImpl{
 		dyn: w.dyn.Resource(schema.GroupVersionResource{
-			Group:    "custom.tektoncd.dev",
+			Group:    "custom.tekton.dev",
 			Version:  "v1alpha1",
 			Resource: "approverequests",
 		}),
@@ -133,7 +133,7 @@ var _ typedcustomv1alpha1.ApproveRequestInterface = (*wrapCustomV1alpha1ApproveR
 
 func (w *wrapCustomV1alpha1ApproveRequestImpl) Create(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.CreateOptions) (*v1alpha1.ApproveRequest, error) {
 	in.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "custom.tektoncd.dev",
+		Group:   "custom.tekton.dev",
 		Version: "v1alpha1",
 		Kind:    "ApproveRequest",
 	})
@@ -198,7 +198,7 @@ func (w *wrapCustomV1alpha1ApproveRequestImpl) Patch(ctx context.Context, name s
 
 func (w *wrapCustomV1alpha1ApproveRequestImpl) Update(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.UpdateOptions) (*v1alpha1.ApproveRequest, error) {
 	in.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "custom.tektoncd.dev",
+		Group:   "custom.tekton.dev",
 		Version: "v1alpha1",
 		Kind:    "ApproveRequest",
 	})
@@ -219,7 +219,7 @@ func (w *wrapCustomV1alpha1ApproveRequestImpl) Update(ctx context.Context, in *v
 
 func (w *wrapCustomV1alpha1ApproveRequestImpl) UpdateStatus(ctx context.Context, in *v1alpha1.ApproveRequest, opts v1.UpdateOptions) (*v1alpha1.ApproveRequest, error) {
 	in.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   "custom.tektoncd.dev",
+		Group:   "custom.tekton.dev",
 		Version: "v1alpha1",
 		Kind:    "ApproveRequest",
 	})

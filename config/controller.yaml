@@ -57,6 +57,8 @@ spec:
         ports:
         - name: metrics
           containerPort: 9090
+        - name: server
+          containerPort: 8090
         env:
         - name: SYSTEM_NAMESPACE
           valueFrom:

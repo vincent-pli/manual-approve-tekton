@@ -36,7 +36,7 @@ rules:
   # Allow creating events associated with resources we are controlling.
   - apiGroups: [""]
     resources: ["events"]
-    verbs: ["create"]
+    verbs: ["create", "update", "patch"]
 
   # Allow the reconciliation of exactly our validating webhooks.
   # This is needed for us to patch in caBundle information.
@@ -71,7 +71,7 @@ rules:
   # Allow us to reconcile our resources.
   - apiGroups: ["custom.tekton.dev"]
     resources: ["*"]
-    verbs: ["get", "list", "update", "watch"]
+    verbs: ["get", "list", "update", "watch", "patch"]
 
   - apiGroups: ["tekton.dev"]
     resources: ["runs", "pipelineruns"]

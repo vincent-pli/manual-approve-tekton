@@ -130,6 +130,9 @@ github.com/matttproud/golang_protobuf_extensions/pbutil
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
+# github.com/patrickmn/go-cache v2.1.0+incompatible
+## explicit
+github.com/patrickmn/go-cache
 # github.com/pkg/errors v0.9.1
 github.com/pkg/errors
 # github.com/prometheus/client_golang v1.11.0

@@ -123,23 +123,34 @@ func (r *Reconciler) reconcile(ctx context.Context, run *v1alpha1.Run) error {
 	}
 
 	arCopy := ar.DeepCopy()
-	fmt.Println("---------")
-	fmt.Printf("=== %+v", arCopy)
-	//if approveRequest.requestName is not nil
-	if arCopy.Status.RequestName == "" {
-		arCopy.Status.RequestName = run.Name
-		arCopy.Status.Approved = false
+	for _, req := range arCopy.Status.Requests {
+		if req.RequestName == run.Name {
+			if req.Approved {
+				run.Status.MarkRunSucceeded(approverequestsv1alpha1.ApproveRequestRunReasonSucceeded.String(), "The approve request is approved: %s/%s", ar.Name, ar.Namespace)
+				return nil
+			}
 
-		run.Status.MarkRunRunning(approverequestsv1alpha1.ApproveRequestRunReasonRunning.String(),
-			"There is no taskrun in original pr mark as failed, wait: %s", time.Now().String())
-
-		_, err = r.approverequestClientSet.CustomV1alpha1().ApproveRequests(run.Namespace).UpdateStatus(ctx, arCopy, metav1.UpdateOptions{})
-		if err != nil {
-			return fmt.Errorf("Update ApproveRequest: %s failed: %w", fmt.Sprintf("%s/%s", arCopy.Namespace, arCopy.Name), err)
+			return nil
 		}
-		return nil
-	} else if arCopy.Status.Approved {
-		run.Status.MarkRunSucceeded(approverequestsv1alpha1.ApproveRequestRunReasonSucceeded.String(), "The approve request is approved: %s/%s", ar.Name, ar.Namespace)
+	}
+
+	request := approverequestsv1alpha1.Request{
+		RequestName:      run.Name,
+		Approved:         false,
+		RequestTimestamp: run.ObjectMeta.CreationTimestamp,
+	}
+
+	if arCopy.Status.Requests == nil {
+		arCopy.Status.Requests = []approverequestsv1alpha1.Request{}
+	}
+	arCopy.Status.Requests = append(arCopy.Status.Requests, request)
+
+	run.Status.MarkRunRunning(approverequestsv1alpha1.ApproveRequestRunReasonRunning.String(),
+		"There is no taskrun in original pr mark as failed, wait: %s", time.Now().String())
+
+	_, err = r.approverequestClientSet.CustomV1alpha1().ApproveRequests(run.Namespace).UpdateStatus(ctx, arCopy, metav1.UpdateOptions{})
+	if err != nil {
+		return fmt.Errorf("Update ApproveRequest: %s failed: %w", fmt.Sprintf("%s/%s", arCopy.Namespace, arCopy.Name), err)
 	}
 
 	return nil

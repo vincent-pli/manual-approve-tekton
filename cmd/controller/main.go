@@ -17,15 +17,19 @@ limitations under the License.
 package main
 
 import (
+
 	// The set of controllers this controller process runs.
+	"github.com/vincent-pli/manual-approve-tekton/pkg/reconciler/approverequest"
 	"github.com/vincent-pli/manual-approve-tekton/pkg/reconciler/manualapprove"
 
 	// This defines the shared main for injected controllers.
+
 	"knative.dev/pkg/injection/sharedmain"
 )
 
 func main() {
 	sharedmain.Main("controller",
 		manualapprove.NewController,
+		approverequest.NewController,
 	)
 }

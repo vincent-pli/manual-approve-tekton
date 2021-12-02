@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/hashicorp/go-multierror v1.1.1
+	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/tektoncd/pipeline v0.30.0
 	go.uber.org/zap v1.19.1
 	golang.org/x/time v0.0.0-20210723032227-1f47c861a9ac // indirect

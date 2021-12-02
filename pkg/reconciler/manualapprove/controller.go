@@ -90,8 +90,11 @@ func (e *Enqueue) EnqueueReferenceRun(obj interface{}) {
 
 	// If we can determine the controller ref of this object, then
 	// add that object to our workqueue.
-	if refrence := ar.Status.RequestName; refrence != "" {
-		e.impl.EnqueueKey(types.NamespacedName{Namespace: ar.GetNamespace(), Name: refrence})
+	// TODO, problem here, will cause useless reconcile, need enhancement
+	for _, request := range ar.Status.Requests {
+		if request.RequestName != "" && request.Approved {
+			e.impl.EnqueueKey(types.NamespacedName{Namespace: ar.GetNamespace(), Name: request.RequestName})
+		}
 	}
 }
 

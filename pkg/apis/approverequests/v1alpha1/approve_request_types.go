@@ -80,7 +80,7 @@ var (
 // ApproveRequestSpec holds the desired state of the ApproveRequest (from the client).
 type ApproveRequestSpec struct {
 	// RequstName holds the name of the Kubernetes Service to expose as an "addressable".
-	Dummy string `json:"dummy,omitempty"`
+	Approver string `json:"approver,omitempty"`
 }
 
 const (
@@ -95,13 +95,20 @@ const (
 	ApproveRequestRunReasonSucceeded RunReason = "Succeeded"
 )
 
+type Request struct {
+	// RequstName holds the name of the Kubernetes Service to expose as an "addressable".
+	RequestName      string      `json:"requstName,omitempty"`
+	RequestTimestamp metav1.Time `json:"requestTimestamp,omitempty" protobuf:"bytes,8,opt,name=requestTimestamp"`
+	// Approved shows if the request has been approved or not
+	Approved         bool        `json:"approved,omitempty"`
+	ApproveTimestamp metav1.Time `json:"approveTimestamp,omitempty" protobuf:"bytes,8,opt,name=approveTimestamp"`
+}
+
 // ApproveRequestStatus communicates the observed state of the ApproveRequest (from the controller).
 type ApproveRequestStatus struct {
 	duckv1.Status `json:",inline,omitempty"`
 	// RequstName holds the name of the Kubernetes Service to expose as an "addressable".
-	RequestName string `json:"requstName,omitempty"`
-	// Approved shows if the request has been approved or not
-	Approved bool `json:"approved,omitempty"`
+	Requests []Request `json:"requests"`
 }
 
 // ApproveRequestList is a list of ApproveRequest resources

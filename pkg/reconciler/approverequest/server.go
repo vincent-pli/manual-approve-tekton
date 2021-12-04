@@ -32,7 +32,14 @@ import (
 
 type RequestApprove struct {
 	ApproveTemplate string
-	requests        []approverequestsv1alpha1.Request
+	Requests        []RequestPlain
+}
+
+type RequestPlain struct {
+	RequestName      string
+	RequestTimestamp string
+	Approved         bool
+	ApproveTimestamp string
 }
 
 type WebServer struct {
@@ -97,21 +104,33 @@ func (ws *WebServer) listRequest(w http.ResponseWriter, req *http.Request) {
 	for key, item := range ws.cache.Items() {
 		requestApprove := RequestApprove{}
 		requestApprove.ApproveTemplate = key
-
-		reqs, ok := item.Object.(*[]approverequestsv1alpha1.Request)
+		reqs, ok := item.Object.([]approverequestsv1alpha1.Request)
 		if ok {
-			requestApprove.requests = *reqs
+			requestApprove.Requests = translate(reqs)
 		}
 		requestApproves = append(requestApproves, requestApprove)
 	}
-
 	payload, err := json.Marshal(requestApproves)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	// fmt.Fprintf(w, "hello\n")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(payload)
+}
+
+func translate(orgReqs []approverequestsv1alpha1.Request) []RequestPlain {
+	requests := []RequestPlain{}
+
+	for _, req := range orgReqs {
+		request := RequestPlain{}
+		request.RequestName = req.RequestName
+		request.RequestTimestamp = req.RequestTimestamp.String()
+		request.Approved = req.Approved
+		request.ApproveTimestamp = req.ApproveTimestamp.String()
+		requests = append(requests, request)
+	}
+
+	return requests
 }

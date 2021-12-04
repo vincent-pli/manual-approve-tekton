@@ -44,7 +44,11 @@ func NewController(
 		cache:                   c,
 		approverequestClientSet: approverequestclientset,
 	}
-	impl := requestreconciler.NewImpl(ctx, r)
+	impl := requestreconciler.NewImpl(ctx, r, func(impl *controller.Impl) controller.Options {
+		return controller.Options{
+			SkipStatusUpdates: true,
+		}
+	})
 	r.Tracker = impl.Tracker
 
 	logger.Info("Setting up event handlers.")

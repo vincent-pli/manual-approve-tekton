@@ -42,12 +42,27 @@ spec:
               description: Status communicates the observed state of the AddressableService (from the controller).
               type: object
               properties:
-                approved:
-                  description: approved display if the approve request has been approved.
-                  type: boolean
-                requstName:
-                  description: RequstName holds the name of the Tekton.Run which request a manual approve.
-                  type: string
+                requests:
+                  description: Conditions the latest available observations of a resource's current state.
+                  type: array
+                  items:
+                    description: 'Condition defines a readiness condition for a Knative resource. See: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties'
+                    type: object
+                    properties:
+                      approved:
+                        description: approved display if the approve request has been approved.
+                        type: boolean
+                      requstName:
+                        description: RequstName holds the name of the Tekton.Run which request a manual approve.
+                        type: string
+                      requestTimestamp:
+                        description: RequstName holds the name of the Tekton.Run which request a manual approve.
+                        type: string
+                        format: date-time
+                      approveTimestamp:
+                        description: RequstName holds the name of the Tekton.Run which request a manual approve.
+                        type: string
+                        format: date-time
                 conditions:
                   description: Conditions the latest available observations of a resource's current state.
                   type: array

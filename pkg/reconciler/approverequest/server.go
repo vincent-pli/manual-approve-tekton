@@ -98,9 +98,9 @@ func (ws *WebServer) listRequest(w http.ResponseWriter, req *http.Request) {
 		requestApprove := RequestApprove{}
 		requestApprove.ApproveTemplate = key
 
-		reqs, ok := item.Object.([]approverequestsv1alpha1.Request)
+		reqs, ok := item.Object.(*[]approverequestsv1alpha1.Request)
 		if ok {
-			requestApprove.requests = reqs
+			requestApprove.requests = *reqs
 		}
 		requestApproves = append(requestApproves, requestApprove)
 	}

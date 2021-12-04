@@ -92,6 +92,7 @@ func (e *Enqueue) EnqueueReferenceRun(obj interface{}) {
 	// add that object to our workqueue.
 	// TODO, problem here, will cause useless reconcile, need enhancement
 	for _, request := range ar.Status.Requests {
+		fmt.Println("xxxxxxxxxxxxxxxxxx")
 		if request.RequestName != "" && request.Approved {
 			e.impl.EnqueueKey(types.NamespacedName{Namespace: ar.GetNamespace(), Name: request.RequestName})
 		}

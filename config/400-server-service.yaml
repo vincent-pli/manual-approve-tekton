@@ -25,4 +25,4 @@ spec:
     - port: 90
       targetPort: 8090
   selector:
-    role: controller
+    app: controller

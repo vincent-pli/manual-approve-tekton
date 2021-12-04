@@ -114,7 +114,7 @@ func (r *Reconciler) ReconcileKind(ctx context.Context, run *v1alpha1.Run) recon
 }
 
 func (r *Reconciler) reconcile(ctx context.Context, run *v1alpha1.Run) error {
-	// logger := logging.FromContext(ctx)
+	logger := logging.FromContext(ctx)
 
 	// Get the ApproveRequest referenced by the Run
 	ar, err := r.getApproveRequest(ctx, run)
@@ -126,10 +126,12 @@ func (r *Reconciler) reconcile(ctx context.Context, run *v1alpha1.Run) error {
 	for _, req := range arCopy.Status.Requests {
 		if req.RequestName == run.Name {
 			if req.Approved {
+				logger.Infof("The approve request has been approved, mark the run done: %s/%s", run.Namespace, run.Name)
 				run.Status.MarkRunSucceeded(approverequestsv1alpha1.ApproveRequestRunReasonSucceeded.String(), "The approve request is approved: %s/%s", ar.Name, ar.Namespace)
 				return nil
 			}
 
+			logger.Infof("The approve request NOT been approved yet, do nothing: %s/%s", run.Namespace, run.Name)
 			return nil
 		}
 	}
@@ -145,6 +147,7 @@ func (r *Reconciler) reconcile(ctx context.Context, run *v1alpha1.Run) error {
 	}
 	arCopy.Status.Requests = append(arCopy.Status.Requests, request)
 
+	logger.Infof("The approve request assigned, mark the run as running state: %s/%s and update the ApproveRequest", run.Namespace, run.Name)
 	run.Status.MarkRunRunning(approverequestsv1alpha1.ApproveRequestRunReasonRunning.String(),
 		"There is no taskrun in original pr mark as failed, wait: %s", time.Now().String())
 

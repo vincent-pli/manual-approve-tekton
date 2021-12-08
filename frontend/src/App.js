@@ -1,4 +1,5 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Dashboard from './components/Dashboard';
 import Datatable from './components/Tables';
@@ -10,10 +11,10 @@ class App extends React.Component {
 
     render(){
       return (
-        <Router>
+        <Router history={browserHistory}>
           <div>       
             <Switch>
-              <Route path="/requests/:approve" component={Datatable} >
+              <Route path="/#/requests" component={Datatable} >
               </Route>
               <Route exact path="/" >
                 <Dashboard/>

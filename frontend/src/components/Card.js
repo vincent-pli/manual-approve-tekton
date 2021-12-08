@@ -39,13 +39,12 @@ class ApproveCard extends React.Component {
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                  RT
+                  AT
                 </Avatar>
               }
               action={
-                // <Link to={`/requests/${ this.props.approve }`}>
                 <Link to={{  
-                  pathname: "/requests/dummy", 
+                  pathname: "/#/requests", 
                   approve: this.props.approve }}>
                 <IconButton aria-label="settings">
                   <Badge badgeContent={this.props.approve.requestNum} color="primary">

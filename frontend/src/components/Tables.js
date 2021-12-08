@@ -22,7 +22,6 @@ class Datatable extends React.Component {
         date: new Date(),
         approve: props.location.approve,
       };
-
     }
   
     componentDidMount() {

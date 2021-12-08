@@ -27,7 +27,6 @@ class ApproveCard extends React.Component {
     constructor(props) {
       console.log(props)
       super(props);
-      this.state = {ready: false};
     }
 
     componentDidMount() {
@@ -75,21 +74,6 @@ class ApproveCard extends React.Component {
                 Name: {this.props.approve.templateName}
               </Typography>
             </CardContent>
-            {/* <CardActions>
-              {!this.state.ready && (
-                  <CircularProgress
-                  size={30}
-                  sx={{
-                    color: green[500],
-                    position: 'absolute',
-                  }}
-                />
-              )
-
-              }
-
-              <Button href={window._env_.REPORT_URL + "reports/" + ".html"} variant="contained" disabled={false} size="small">CHECK REPORT</Button>
-            </CardActions> */}
         </Card>
     }
 

@@ -42,7 +42,19 @@ spec:
             weight: 100
 
       serviceAccountName: controller
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-conf
       containers:
+      - name: nginx
+        image: jinchi/nginx-starboard-report:0.6.4
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
       - name: controller
         # This is the Go import path for the binary that is containerized
         # and substituted here.

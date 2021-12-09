@@ -5,7 +5,7 @@ import App from './App';
 const title = 'Manual Approve';
 
 window._env_ = {
-  APPROVE_URL: 'http://9.30.189.42:9999',
+  APPROVE_URL: window.location.href,
 }
 
 ReactDOM.render(

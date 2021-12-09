@@ -23,6 +23,11 @@ metadata:
 spec:
   ports:
     - port: 90
+      name: server
       targetPort: 8090
+    - name: gui
+      port: 80
+      targetPort: 8080
+      protocol: TCP
   selector:
     app: controller

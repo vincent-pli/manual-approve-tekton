@@ -31,7 +31,7 @@ class Datatable extends React.Component {
     approveRequest(row){
         let approveTemplate = this.state.approve.templateNS + "/" + this.state.approve.templateName;
         if(row){
-            fetch(window._env_.APPROVE_URL + '/approve?approvetemplate=' + approveTemplate + '&request=' + row.RequestName)
+            fetch(window._env_.APPROVE_URL + '/server/approve?approvetemplate=' + approveTemplate + '&request=' + row.RequestName)
                 .then(response => {
                     if(!response.ok){
                         const error = response.statusText;

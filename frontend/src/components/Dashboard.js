@@ -17,7 +17,7 @@ class Dashboard extends React.Component {
     componentDidMount() {
       console.log('I was triggered during componentDidMount')
   
-      fetch(window._env_.APPROVE_URL + '/requsts')
+      fetch(window._env_.APPROVE_URL + '/server/requsts')
           .then(response => response.json())
           .then(data => this.setApprovelists(data));
     }

@@ -24,7 +24,7 @@ The controller is based on [knative-pkg](https://github.com/knative-sandbox/samp
 The project has a very simple GUI to do the approvement, like this:
 <img src="./dashboard.png" width = "600" height = "200" alt="starBoard Report" align=center />
 
-and
+
 <img src="./list.png" width = "600" height = "120" alt="starBoard Report" align=center />
 
 

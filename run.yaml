@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Run
 metadata:
-  name: request-run
+  generateName: request-run
   namespace: tekton-manualapprove
 spec:
   ref:

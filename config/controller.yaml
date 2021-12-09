@@ -48,7 +48,7 @@ spec:
             name: nginx-conf
       containers:
       - name: nginx
-        image: jinchi/nginx-starboard-report:0.6.4
+        image: quay.io/pengli1707/approvegui:v0.0.2
         ports:
         - containerPort: 8080
         volumeMounts:
